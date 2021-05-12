@@ -9,7 +9,8 @@ interface ProjectItemProps {
     project: {
         id: string,
         title: string,
-        createdAt: string
+        createdAt: string,
+        progress: number
     }
 }
 
@@ -39,6 +40,13 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={styles.title}>{project.title}</Text>
                     <Text style={styles.time}>{time(project.createdAt)}</Text>
+                    <View style={{
+                        width: `${project.progress}%`,
+                        borderColor: 'limegreen',
+                        borderWidth: 1,
+                        position: 'absolute',
+                        top: '90%'
+                    }}></View>
                 </View>
             </View>
         </Pressable>
