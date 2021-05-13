@@ -25,17 +25,13 @@ const SignInScreen = () => {
     // mutation[0] : A function to trigger the mutation
     // mutation[1] : result object
     //   { data, error, loading }
-    const [signIn, { data, error, loading }] = useMutation(SIGN_IN_MUTATION);
-
-    useEffect(() => {
-        if (error) {
-            Alert.alert('Invalid credentials, try again')
-        }
-    }, [error])
+    const [signIn, { data, loading }] = useMutation(SIGN_IN_MUTATION);
 
     if (data) {
         AsyncStorage.setItem('token', data.signIn.token)
             .then(() => {
+                setEmail('')
+                setPassword('')
                 navigation.navigate('Home')
             })
     }

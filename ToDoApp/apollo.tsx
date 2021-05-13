@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const URI = 'http://192.168.8.103:4000/'
+const URI = 'https://todoapp-apollo-api.herokuapp.com/'
 
 const httpLink = createHttpLink({
     uri: URI
@@ -13,6 +13,15 @@ const cache = new InMemoryCache({
         TaskList: {
             fields: {
                 todos: {
+                    merge(existing = [], incoming: any[]) {
+                        return [...incoming];
+                    },
+                }
+            }
+        },
+        Query: {
+            fields: {
+                myTaskLists: {
                     merge(existing = [], incoming: any[]) {
                         return [...incoming];
                     },

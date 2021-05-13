@@ -37,7 +37,7 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
                 <View style={styles.iconContainer}>
                     <MaterialCommunityIcons name="file-outline" size={24} color="grey" />
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '80%' }}>
                     <Text style={styles.title}>{project.title}</Text>
                     <Text style={styles.time}>{time(project.createdAt)}</Text>
                     <View style={{

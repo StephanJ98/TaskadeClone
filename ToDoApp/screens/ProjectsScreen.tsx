@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, Alert, Modal, Pressable, View as NormalView, Text
 import ProjectItem from '../components/Projectitem'
 import { View } from '../components/Themed'
 import { useQuery, gql, useMutation } from '@apollo/client'
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
 const MY_PROJECTS = gql`
 query myTaskLists {
@@ -24,13 +24,20 @@ mutation createTaskList($title: String!){
 }
 `
 
+const DELETE_TASKLIST = gql`
+mutation deleteTaskList ($id: ID!){
+  deleteTaskList(id: $id)
+}
+`
+
 export default function ProjectsScreen() {
   const [modalVisible, setModalVisible] = useState(false)
   const [projects, setProjects] = useState([])
   const [text, onChangeText] = useState('')
 
-  const { data, error, refetch } = useQuery(MY_PROJECTS)
+  const { data, error, refetch } = useQuery(MY_PROJECTS, { pollInterval: 1000 })
   const [createTaskList, { data: newData }] = useMutation(CREATE_TASKLIST)
+  const [deleteTaskList, { data: newDataDel }] = useMutation(DELETE_TASKLIST)
   const func = async () => await refetch()
 
   useEffect(() => {
@@ -44,16 +51,40 @@ export default function ProjectsScreen() {
   }, [data])
 
   useEffect(() => {
-    if (newData) {
+    if (newData || newDataDel) {
       func()
     }
-  }, [newData])
+  }, [newData, newDataDel])
 
   return (
     <View style={styles.container}>
       <FlatList
         data={projects}
-        renderItem={({ item }) => (<ProjectItem project={item} />)}
+        renderItem={({ item }) => (
+          <View style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <ProjectItem project={item} />
+            <MaterialCommunityIcons
+              name="delete"
+              size={30}
+              color="grey"
+              style={{
+                position: 'absolute',
+                padding: 10,
+                left: '87%',
+                zIndex: 1000
+              }}
+              onPress={
+                async () => await deleteTaskList({
+                  variables: {
+                    id: item.id
+                  }
+                })}
+            />
+          </View>
+        )}
         style={{ width: '100%' }}
       />
       <Pressable
